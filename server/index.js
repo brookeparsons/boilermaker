@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 8080;
 const { db } = require("./db");
 const session = require("express-session");
-process.env.SESSION_SECRET = "where am i supposed to declare this";
 
 // you'll of course want static middleware so your browser can request things like your 'bundle.js'
 app.use(express.static(path.join(__dirname, "./public")));
@@ -32,6 +31,27 @@ app.use(
     saveUninitialized: false,
   })
 );
+
+//Initialize Passport
+const passport = require("passport");
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+//Passport also needs to know how to serialize/deserialize the user.
+passport.serializeUser((user, done) => {
+  try {
+    done(null, user.id);
+  } catch (err) {
+    done(err);
+  }
+});
+
+passport.deserializeUser((id, done) => {
+  User.findById(id)
+    .then((user) => done(null, user))
+    .catch(done);
+});
 
 //listening on MUST SYNC DATABASE
 const port = process.env.PORT || 3000;
