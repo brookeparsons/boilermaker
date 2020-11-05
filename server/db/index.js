@@ -1,5 +1,5 @@
 const db = require("./database");
-const example = require("./models/example");
+const example = require("./models/user");
 
 //create associations here
 

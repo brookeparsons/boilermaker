@@ -1,6 +1,8 @@
 const router = require("express").Router();
-const user = require("./user");
+// const user = require("./user");
+// const auth = require("./auth");
 
+router.use("/auth/google", require("./auth"));
 router.use("/user", require("./user"));
 
 //router.use('/users', require('./users'));

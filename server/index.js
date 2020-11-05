@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 8080;
 const { db } = require("./db");
 const session = require("express-session");
+const passport = require("passport");
 
 // you'll of course want static middleware so your browser can request things like your 'bundle.js'
 app.use(express.static(path.join(__dirname, "./public")));
@@ -32,12 +33,6 @@ app.use(
   })
 );
 
-//Initialize Passport
-const passport = require("passport");
-
-app.use(passport.initialize());
-app.use(passport.session());
-
 //Passport also needs to know how to serialize/deserialize the user.
 passport.serializeUser((user, done) => {
   try {
@@ -60,6 +55,10 @@ app.listen(port, function () {
   console.log("Who's there?");
   console.log(`Your server, listening on port ${port}`);
 });
+
+//Initialize Passport ... initialize after all this? should this go at the top?
+app.use(passport.initialize());
+app.use(passport.session());
 
 // const startListening = () => {
 //   // start listening (and create a 'server' object representing our server)
@@ -91,7 +90,9 @@ app.listen(port, function () {
 //   console.log("!!!! creatApp() should run. u require the app in a test spec?");
 // }
 
+//redirects
 app.use("/api", require("./apiRoutes"));
+
 // Make sure this is right at the end of your server logic!
 // The only thing after this might be a piece of middleware to serve up 500 errors for server problems
 // (However, if you have middleware to serve up 404s, that go would before this as well)
